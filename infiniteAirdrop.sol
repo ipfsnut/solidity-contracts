@@ -17,13 +17,12 @@ contract AirdropContract {
         token = _token;
         recipients = _recipients;
 
-        require(token.balanceOf(address(this)) >= _totalAirdropAmount, "Insufficient token balance");
+        require(_token.balanceOf(msg.sender) >= _totalAirdropAmount, "Insufficient token balance");
 
         uint256 airdropAmountPerRecipient = _totalAirdropAmount / recipients.length;
 
         for (uint256 i = 0; i < recipients.length; i++) {
-            token.transfer(recipients[i], airdropAmountPerRecipient);
+            require(_token.transferFrom(msg.sender, recipients[i], airdropAmountPerRecipient), "Token transfer failed");
         }
     }
 }
-
